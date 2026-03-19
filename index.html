@@ -3,140 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>工作性价比深度诊断系统 (专业版)</title>
+    <title>工作性价比计算器 (SPA-Refined)</title>
     <style>
-        /* 基础样式 */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; line-height: 1.6; padding-bottom: 40px;}
-        .container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; }
-
-        /* 顶部横幅 */
-        .header-banner { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; padding: 35px 20px 25px; text-align: center; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2); }
-        .header-banner h2 { font-size: 24px; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.5px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; line-height: 1.5; padding-bottom: 40px; }
+        .container { max-width: 420px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; }
+        
+        .header-banner { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 25px 15px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2); }
+        .header-banner h2 { font-size: 20px; margin-bottom: 5px; font-weight: 600; }
         .header-banner p { font-size: 13px; opacity: 0.9; }
 
-        /* 内容卡片 */
-        .card { background: #fff; border-radius: 14px; margin: -10px 15px 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
-        .section-title { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 16px; display: flex; align-items: center; }
-        .section-title::before { content: ''; display: inline-block; width: 4px; height: 16px; background: #2563eb; margin-right: 8px; border-radius: 2px; }
+        .card { background: #fff; border-radius: 12px; margin: -10px 15px 15px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .section-title { font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 12px; }
 
-        /* 表单布局 */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 12px; color: #64748b; margin-bottom: 5px; font-weight: 500; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; font-size: 14px; color: #1e293b; outline: none; transition: 0.2s; -webkit-appearance: none; }
+        input:focus, select:focus { border-color: #10b981; background: #fff; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
         
-        /* 输入框样式 */
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 13px; color: #475569; margin-bottom: 8px; font-weight: 600;}
-        input, select { width: 100%; padding: 13px 14px; border: 1px solid #cbd5e1; border-radius: 10px; background-color: #f8fafc; font-size: 14px; color: #0f172a; outline: none; transition: 0.2s; -webkit-appearance: none; }
-        input:focus, select:focus { border-color: #2563eb; background-color: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         
-        /* 标签页选择器 */
-        .tag-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag-item { flex-grow: 1; text-align: center; padding: 10px 8px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background-color: #f8fafc; color: #475569; cursor: pointer; transition: all 0.2s ease;}
-        .tag-item.active { background-color: #2563eb; color: white; border-color: #2563eb; font-weight: 600; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);}
+        .tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .tag { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #475569; background: #f8fafc; cursor: pointer; transition: 0.2s; flex-grow: 1; text-align: center; font-weight: 500; }
+        .tag.active { border-color: #10b981; color: #10b981; background: #ecfdf5; font-weight: 600; }
 
-        /* 生成按钮 */
-        .submit-btn { display: block; width: calc(100% - 30px); margin: 30px auto 10px; padding: 16px; background: #2563eb; color: #fff; text-align: center; border-radius: 14px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3); transition: transform 0.1s; }
-        .submit-btn:active { transform: scale(0.96); }
+        .submit-btn { display: block; width: calc(100% - 30px); margin: 20px auto 10px; padding: 14px; background: #10b981; color: #fff; text-align: center; border-radius: 10px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2); transition: 0.2s; }
+        .submit-btn:active { transform: scale(0.98); }
 
-        /* ================= 结果页面 ================= */
-        #resultBoard { display: none; padding: 20px 15px; }
-        .report-header { text-align: center; margin-bottom: 25px; }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; border: 6px solid #e2e8f0; margin: 0 auto 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-        .score-val { font-size: 48px; font-weight: 800; color: #2563eb; line-height: 1; margin-bottom: 5px; }
-        .score-label { font-size: 13px; color: #64748b; font-weight: 600; }
-        .report-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-        
-        /* 数据明细卡片 */
-        .data-panel { background: #f8fafc; border-radius: 12px; padding: 18px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
-        .data-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px; }
-        .data-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
-        .data-label { color: #475569; }
-        .data-value { font-weight: 700; color: #0f172a; }
-        .highlight { color: #ef4444; font-size: 18px; }
+        /* 结果展示样式 */
+        .score-box { border-radius: 12px; border: 2px solid #e2e8f0; background: #f8fafc; margin-bottom: 15px; text-align: center; padding: 20px; transition: 0.3s; }
+        .score-val { font-size: 32px; font-weight: 800; color: #333; line-height: 1; margin-bottom: 5px; }
+        .score-label { font-size: 13px; color: #64748b; font-weight: 500; }
+        .result-text { font-size: 14px; color: #475569; margin-bottom: 15px; padding: 0 10px; }
+        .res-highlight { font-weight: 600; color: #10b981; }
 
-        /* === 新增：三大核心指数进度条 === */
-        .index-panel { background: #fff; border-radius: 12px; padding: 18px; margin-bottom: 15px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .index-item { margin-bottom: 15px; }
-        .index-item:last-child { margin-bottom: 0; }
-        .index-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #1e293b; }
-        .index-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
-        .index-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-in-out; }
-        .fill-money { background: #f59e0b; }
-        .fill-mental { background: #8b5cf6; }
-        .fill-body { background: #10b981; }
+        .back-btn { background: #f1f5f9; color: #475569; margin-top: 15px; }
 
-        /* === 新增：行动指南列表 === */
-        .action-panel { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px; margin-bottom: 15px; }
-        .action-title { font-size: 15px; font-weight: 700; color: #166534; margin-bottom: 10px; display: flex; align-items: center; }
-        .action-list { list-style: none; padding: 0; margin: 0; }
-        .action-list li { position: relative; padding-left: 20px; font-size: 13px; color: #15281b; margin-bottom: 8px; line-height: 1.5; }
-        .action-list li::before { content: '👉'; position: absolute; left: 0; top: 0; font-size: 12px; }
-
-        /* 独家点评 */
-        .exclusive-review { background: linear-gradient(to bottom right, #fff, #fef2f2); border-left: 4px solid #ef4444; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);}
-        .review-title { font-size: 14px; font-weight: 700; color: #b91c1c; margin-bottom: 8px; display: flex; align-items: center; }
-        .review-content { font-size: 14px; color: #450a0a; line-height: 1.6; font-style: normal; }
-
-        .back-btn { background: #f1f5f9; color: #475569; margin-top: 30px; box-shadow: none; border: 1px solid #cbd5e1; }
-
-        /* ================= 全屏加载动画 ================= */
-        #loadingScreen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 999; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
-        .loading-subtext { font-size: 13px; color: #64748b; }
-        .loading-step { font-size: 14px; color: #2563eb; font-weight: 600; margin-top: 15px; min-height: 20px; transition: opacity 0.3s; }
+        /* 小字免责声明样式 */
+        .disclaimer {
+            font-size: 10px;
+            color: #94a3b8; /* slate-400 */
+            text-align: center;
+            margin-top: 30px;
+            padding: 0 15px;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
-    <div id="loadingScreen">
-        <div class="spinner"></div>
-        <div class="loading-text">系统正在全力运算中</div>
-        <div class="loading-subtext">已录入 28 项职场硬核指标</div>
-        <div class="loading-step" id="loadingStepText">正在核算真实时薪...</div>
-    </div>
-
     <div class="container">
-        <div id="formSection">
+        <div id="formPage">
             <div class="header-banner">
-                <h2>全维打工体检系统</h2>
-                <p>28项硬核指标 · 扒光这粉饰的牛马职场</p>
+                <h2>打工人职场体检所</h2>
+                <p>28维精准诊断 · 扒光这粉饰的牛马职场</p>
             </div>
 
-            <div class="card">
-                <div class="section-title">薪资与时间基础</div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="section-title">⚖️ 钱与时间基础</div>
                 <div class="form-group">
-                    <label>年薪总包 (元，含年终奖等一切收益)</label>
-                    <input type="number" id="salary" value="150000">
+                    <label>年薪总包 (元，含年终等一切收益)</label>
+                    <input type="number" id="salary" placeholder="150000" value="150000">
                 </div>
                 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label>每周工作天数</label>
+                        <label>每周工作天数/d</label>
                         <input type="number" id="workDays" value="5">
                     </div>
                     <div class="form-group">
-                        <label>周(居家)天数</label>
+                        <label>周WFH(居家)天数/d</label>
                         <input type="number" id="wfhDays" value="0">
                     </div>
                 </div>
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label>年假天数</label>
+                        <label>年假天数/d</label>
                         <input type="number" id="annualLeave" value="5">
                     </div>
                     <div class="form-group">
-                        <label>带薪病假</label>
+                        <label>带薪病假/d</label>
                         <input type="number" id="sickLeave" value="3">
                     </div>
                 </div>
 
                 <div class="grid-3">
                     <div class="form-group">
-                        <label>日总工时/h</label>
+                        <label>日工时/h</label>
                         <input type="number" id="workHours" value="8">
                     </div>
                     <div class="form-group">
@@ -148,304 +103,123 @@
                         <input type="number" id="slack" value="2">
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>午休时长</label>
-                    <div class="tag-group" id="lunchGroup">
-                        <div class="tag-item" data-val="-20">≤1小时 (刨去吃饭没法睡)</div>
-                        <div class="tag-item active" data-val="0">1.5小时 (正常吃歇)</div>
-                        <div class="tag-item" data-val="20">≥2小时 (能充分休息)</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>下班通勤方式 (体感折磨度)</label>
-                    <div class="tag-group" id="commuteTypeGroup">
-                        <div class="tag-item" data-val="20">步行/骑车极速直达</div>
-                        <div class="tag-item active" data-val="0">顺畅自驾/地铁有座</div>
-                        <div class="tag-item" data-val="-20">挤不上地铁/天天罚站</div>
-                        <div class="tag-item" data-val="-40">跨城通勤/倒车3次以上</div>
-                    </div>
-                </div>
             </div>
 
             <div class="card">
-                <div class="section-title">城市与个人背景</div>
+                <div class="section-title">👤 个人背景与定位</div>
                 <div class="grid-2">
-                    <div class="form-group">
-                        <label>所在城市级别</label>
-                        <select id="city">
-                            <option value="-0.05">一线城市</option>
-                            <option value="0" selected>新一线/二线城市</option>
-                            <option value="0.05">三四线城市</option>
-                            <option value="0.1">县城/乡镇</option>
-                        </select>
-                    </div>
                     <div class="form-group">
                         <label>学位类型</label>
                         <select id="degree">
-                            <option value="专科">专科/其他</option>
                             <option value="本科" selected>本科</option>
                             <option value="硕士">硕士/博士</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>学校类型</label>
-                        <select id="school">
-                            <option value="海外名校/QS100">海外名校/QS100</option>
-                            <option value="985/双一流">985 / 双一流高校</option>
-                            <option value="211">211高校</option>
-                            <option value="双非/普通本科" selected>双非 / 普通本科</option>
-                            <option value="大专及以下">大专 / 中专及以下</option>
+                            <option value="专科">专科/其他</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>工作年限</label>
-                        <select id="experience">
-                            <option value="应届生">应届生</option>
-                            <option value="1-3年" selected>1-3年</option>
-                            <option value="4-6年">4-6年</option>
-                            <option value="7年以上">7年以上</option>
+                        <label>城市级别</label>
+                        <select id="city">
+                            <option value="一线">一线 (北上广深)</option>
+                            <option value="新一线" selected>新一线/二线</option>
+                            <option value="三四线">三四线</option>
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>工作年限</label>
+                    <select id="experience">
+                        <option value="1-3年" selected>1-3年 (初级)</option>
+                        <option value="4-6年">4-6年 (中级)</option>
+                        <option value="7年以上">7年以上 (高级/专家)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-title">🎁 客观福利与消耗</div>
+                
+                <div class="form-group">
+                    <label>五险一金缴纳情况 (真实身价体现)</label>
+                    <div class="tag-group" id="socialSecurityTags">
+                        <div class="tag active" data-val="0.15">全额高比例</div>
+                        <div class="tag" data-val="0.05">按薪资正常交</div>
+                        <div class="tag" data-val="-0.1">最低基数</div>
+                        <div class="tag" data-val="-0.2">不交/乱扣钱</div>
+                    </div>
+                </div>
 
                 <div class="form-group">
-                    <label>是否在家乡工作？</label>
-                    <div class="tag-group" id="hometownGroup">
-                        <div class="tag-item active" data-val="0">异地打拼 (租房成本高)</div>
-                        <div class="tag-item" data-val="0.15">在家乡 (省心/成本低)</div>
+                    <label>下班后隐形枷锁 (微信轰炸频率)</label>
+                    <div class="tag-group" id="afterHoursTags">
+                        <div class="tag active" data-val="0.1">彻底失联</div>
+                        <div class="tag" data-val="-0.1">偶尔艾特</div>
+                        <div class="tag" data-val="-0.25">经常加班拉会</div>
+                        <div class="tag" data-val="-0.5">24小时待命</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>职业稳定性</label>
+                    <div class="tag-group" id="stabilityTags">
+                        <div class="tag" data-val="0.2">政府/事业编</div>
+                        <div class="tag active" data-val="0.1">国企大厂</div>
+                        <div class="tag" data-val="0">自由职业</div>
+                        <div class="tag" data-val="-0.2">派遣/外包</div>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="section-title">隐形福利与消耗</div>
-                
-                <div class="form-group">
-                    <label>年终奖/大饼变现率</label>
-                    <div class="tag-group" id="bonusGroup">
-                        <div class="tag-item" data-val="0.15">写进合同100%发</div>
-                        <div class="tag-item active" data-val="0">看公司效益一般都有</div>
-                        <div class="tag-item" data-val="-0.1">纯盲盒领导看心情</div>
-                        <div class="tag-item" data-val="-0.25">纯画大饼还爱扣绩效</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>五险一金缴纳情况</label>
-                    <div class="tag-group" id="socialSecurityGroup">
-                        <div class="tag-item" data-val="0.15">全额高比例缴纳</div>
-                        <div class="tag-item active" data-val="0.05">按真实薪资正常交</div>
-                        <div class="tag-item" data-val="-0.1">按最低基数交</div>
-                        <div class="tag-item" data-val="-0.2">不交 / 乱扣钱</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>下班后的隐形工作</label>
-                    <div class="tag-group" id="afterHoursGroup">
-                        <div class="tag-item active" data-val="25">彻底失联 (神仙体验)</div>
-                        <div class="tag-item" data-val="0">偶尔回一两条消息</div>
-                        <div class="tag-item" data-val="-25">经常晚间/周末拉会</div>
-                        <div class="tag-item" data-val="-50">24小时夺命连环call</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>公司日常补助金</label>
-                    <div class="tag-group" id="perksGroup">
-                        <div class="tag-item" data-val="0.1">包三餐 / 高额餐补</div>
-                        <div class="tag-item active" data-val="0.05">普通餐补 / 班车</div>
-                        <div class="tag-item" data-val="0">没有任何补贴</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>考勤与形式主义</label>
-                    <div class="tag-group" id="attendanceGroup">
-                        <div class="tag-item" data-val="-20">打卡扣钱 / 繁琐日报</div>
-                        <div class="tag-item active" data-val="0">正常打卡上下班</div>
-                        <div class="tag-item" data-val="20">弹性不打卡 / 只看结果</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="section-title">业务考核与硬件条件</div>
-                
-                <div class="form-group">
-                    <label>KPI/绩效压力</label>
-                    <div class="tag-group" id="kpiGroup">
-                        <div class="tag-item" data-val="20">几乎没考核(闭眼拿满)</div>
-                        <div class="tag-item active" data-val="0">正常努力可达标</div>
-                        <div class="tag-item" data-val="-20">末位淘汰/强制分布</div>
-                        <div class="tag-item" data-val="-40">纯画大饼永远拿不到</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>无效会议与PPT文化</label>
-                    <div class="tag-group" id="meetingGroup">
-                        <div class="tag-item" data-val="20">不开会直奔主题</div>
-                        <div class="tag-item active" data-val="0">每天一两个会能接受</div>
-                        <div class="tag-item" data-val="-20">天天写PPT做表面汇报</div>
-                        <div class="tag-item" data-val="-40">开会到半夜全在扯皮</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>个人成长空间</label>
-                    <div class="tag-group" id="growthGroup">
-                        <div class="tag-item" data-val="-0.15">纯流水线 / 无技术含量</div>
-                        <div class="tag-item active" data-val="0">正常积累经验熟练度</div>
-                        <div class="tag-item" data-val="0.2">核心业务 / 飞速成长</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>工作硬件与办公设施</label>
-                    <div class="tag-group" id="hardwareGroup">
-                        <div class="tag-item" data-val="20">顶配电脑+人体工学椅</div>
-                        <div class="tag-item active" data-val="0">正常办公配置</div>
-                        <div class="tag-item" data-val="-20">电脑卡顿 / 厕所排队</div>
-                        <div class="tag-item" data-val="-40">需自带电脑办公</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="section-title">健康消耗与团队氛围</div>
-                
-                <div class="form-group">
-                    <label>基础作息消耗</label>
-                    <div class="tag-group" id="physicalGroup">
-                        <div class="tag-item" data-val="20">养生局 / 随时下楼溜达</div>
-                        <div class="tag-item active" data-val="0">普通脑力劳动 / 久坐</div>
-                        <div class="tag-item" data-val="-30">频繁出差 / 昼夜颠倒</div>
-                        <div class="tag-item" data-val="-50">重体力 / 极度熬夜</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>健康“工伤”折损指数</label>
-                    <div class="tag-group" id="healthGroup">
-                        <div class="tag-item" data-val="20">面色红润作息规律</div>
-                        <div class="tag-item active" data-val="0">正常疲惫周末能缓</div>
-                        <div class="tag-item" data-val="-30">过劳肥/掉头发/失眠</div>
-                        <div class="tag-item" data-val="-60">确诊结节/严重职业病</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>职业稳定度</label>
-                    <div class="tag-group" id="stabilityGroup">
-                        <div class="tag-item" data-val="0.2">政府/事业单位</div>
-                        <div class="tag-item" data-val="0.1">国企/大型企业</div>
-                        <div class="tag-item active" data-val="0.05">外企/守法私企</div>
-                        <div class="tag-item" data-val="-0.1">私企/狼性文化</div>
-                        <div class="tag-item" data-val="-0.2">劳务派遣/OD</div>
-                        <div class="tag-item" data-val="0">自由职业</div>
-                    </div>
-                </div>
-
+                <div class="section-title">🧠 主观氛围内耗</div>
                 <div class="form-group">
                     <label>直属领导做派</label>
-                    <div class="tag-group" id="leaderGroup">
-                        <div class="tag-item" data-val="-40">疯狂PUA / 乱甩锅</div>
-                        <div class="tag-item" data-val="-15">微操狂魔 / 喜欢施压</div>
-                        <div class="tag-item active" data-val="0">中规中矩 / 正常派发</div>
-                        <div class="tag-item" data-val="20">护犊子 / 亦师亦友</div>
+                    <div class="tag-group" id="leaderTags">
+                        <div class="tag" data-val="0.2">亦师亦友</div>
+                        <div class="tag active" data-val="0">中规中矩</div>
+                        <div class="tag" data-val="-0.2">微操狂魔</div>
+                        <div class="tag" data-val="-0.4">疯狂PUA甩锅</div>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label>周围同事日常氛围</label>
-                    <div class="tag-group" id="colleagueGroup">
-                        <div class="tag-item" data-val="-30">勾心斗角 / 互相挖坑</div>
-                        <div class="tag-item active" data-val="0">萍水相逢 / 只聊工作</div>
-                        <div class="tag-item" data-val="15">氛围和睦 / 偶尔聚餐</div>
-                        <div class="tag-item" data-val="30">神仙同事 / 情绪价值拉满</div>
+                    <label>同事团队氛围</label>
+                    <div class="tag-group" id="colleagueTags">
+                        <div class="tag" data-val="0.2">神仙同事</div>
+                        <div class="tag active" data-val="0">萍水相逢</div>
+                        <div class="tag" data-val="-0.2">勾心斗角</div>
                     </div>
                 </div>
             </div>
 
-            <button class="submit-btn" onclick="startLoading()">生成我的职场诊断报告</button>
+            <button class="submit-btn" onclick="generateReport()">🚀 点击生成职场体检报告</button>
         </div>
 
-        <div id="resultBoard">
-            <div class="report-header">
-                <div class="score-circle" id="scoreCircle">
+        <div id="resultPage" style="display: none; padding: 15px;">
+            <div class="result-header">
+                <div class="score-box" id="scoreBox">
                     <div class="score-val" id="scoreValue">0.00</div>
                     <div class="score-label">性价比综合得分</div>
                 </div>
-                <div class="report-title" id="reportTitle">评估中...</div>
-                <div style="font-size: 14px; color: #64748b;" id="reportDesc">结合您的学历与环境深度解析</div>
+                <p class="result-text" id="resultText"></p>
+                <p class="result-text">
+                    你每天日均实际被公司占用的时间为: <span class="res-highlight" id="resHours">0</span> 小时
+                    (已包含通勤并减轻摸鱼时间)。
+                </p>
             </div>
 
-            <div class="data-panel">
-                <div class="data-row">
-                    <span class="data-label">日均被占用的生命时长</span>
-                    <span class="data-value" id="resHours">0 小时</span>
-                </div>
-                <div class="data-row" style="margin-top: 10px; padding-top: 10px; border-top: 2px dashed #e2e8f0; border-bottom: none;">
-                    <span class="data-label" style="font-weight: 700; color: #0f172a;">🩸 扒开底裤的真实时薪：</span>
-                    <span class="data-value highlight" id="resWage">¥0 / 小时</span>
-                </div>
+            <button class="submit-btn back-btn" onclick="goBack()">返回修改</button>
+            
+            <div class="disclaimer">
+                * 免责声明：本测评报告由算法生成，结果仅供娱乐与自我参考，不构成任何正式的职业规划或法律建议。打工人不易，请结合自身实际感受综合判断。本工具作者对结果及相关后果不承担法律责任。
             </div>
-
-            <div class="index-panel">
-                <div class="section-title" style="font-size: 14px; margin-bottom: 12px; border-color: #f59e0b;">职场三大核心指数评估</div>
-                
-                <div class="index-item">
-                    <div class="index-header">
-                        <span>💰 搞钱效率 (时薪/福利)</span>
-                        <span id="txtMoney">0%</span>
-                    </div>
-                    <div class="index-bar-bg"><div class="index-bar-fill fill-money" id="barMoney" style="width: 0%;"></div></div>
-                </div>
-                
-                <div class="index-item">
-                    <div class="index-header">
-                        <span>🧠 情绪健康度 (领导/同事/氛围)</span>
-                        <span id="txtMental">0%</span>
-                    </div>
-                    <div class="index-bar-bg"><div class="index-bar-fill fill-mental" id="barMental" style="width: 0%;"></div></div>
-                </div>
-
-                <div class="index-item">
-                    <div class="index-header">
-                        <span>🔋 肉体保鲜度 (作息/通勤/消耗)</span>
-                        <span id="txtBody">0%</span>
-                    </div>
-                    <div class="index-bar-bg"><div class="index-bar-fill fill-body" id="barBody" style="width: 0%;"></div></div>
-                </div>
-            </div>
-
-            <div class="action-panel" id="actionPanel">
-                <div class="action-title" id="actionTitle">🎯 专属牛马自救指南</div>
-                <ul class="action-list" id="actionList">
-                    </ul>
-            </div>
-
-            <div class="exclusive-review">
-                <div class="review-title">💡独家点评：</div>
-                <div class="review-content" id="exclusiveComment">这里是动态生成的深度解析内容...</div>
-            </div>
-
-            <button class="submit-btn back-btn" onclick="goBack()">返回重新测试</button>
         </div>
-
     </div>
 
     <script>
+        // 标签切换逻辑
         function setupTags(groupId) {
             const container = document.getElementById(groupId);
             if (!container) return;
-            const tags = container.querySelectorAll('.tag-item');
+            const tags = container.querySelectorAll('.tag');
             tags.forEach(tag => {
                 tag.addEventListener('click', function() {
                     tags.forEach(t => t.classList.remove('active'));
@@ -454,37 +228,21 @@
             });
         }
         
-        setupTags('lunchGroup'); setupTags('commuteTypeGroup'); setupTags('hometownGroup'); 
-        setupTags('bonusGroup'); setupTags('socialSecurityGroup'); setupTags('afterHoursGroup'); 
-        setupTags('perksGroup'); setupTags('attendanceGroup'); setupTags('kpiGroup'); 
-        setupTags('meetingGroup'); setupTags('growthGroup'); setupTags('hardwareGroup'); 
-        setupTags('physicalGroup'); setupTags('healthGroup'); setupTags('stabilityGroup'); 
-        setupTags('leaderGroup'); setupTags('colleagueGroup');
+        // 初始化所有标签组
+        setupTags('socialSecurityTags');
+        setupTags('afterHoursTags');
+        setupTags('stabilityTags');
+        setupTags('leaderTags');
+        setupTags('colleagueTags');
 
+        // 获取标签值
         function getActiveTagValue(groupId) {
-            const activeTag = document.querySelector(`#${groupId} .tag-item.active`);
+            const activeTag = document.querySelector(`#${groupId} .tag.active`);
             return activeTag ? parseFloat(activeTag.getAttribute('data-val')) : 0;
         }
 
-        function startLoading() {
-            document.getElementById('formSection').style.display = 'none';
-            document.getElementById('loadingScreen').style.display = 'flex';
-            window.scrollTo(0, 0);
-
-            const loadingStepEl = document.getElementById('loadingStepText');
-            setTimeout(() => { loadingStepEl.innerText = "正在分析情绪与健康内耗指数..."; }, 600);
-            setTimeout(() => { loadingStepEl.innerText = "正在生成核心雷达数据..."; }, 1200);
-            setTimeout(() => { loadingStepEl.innerText = "生成终极诊断报告..."; }, 1800);
-
-            setTimeout(() => {
-                document.getElementById('loadingScreen').style.display = 'none';
-                generateReport();
-            }, 2200);
-        }
-
         function generateReport() {
-            document.getElementById('resultBoard').style.display = 'block';
-
+            // 获取数据
             const salary = parseFloat(document.getElementById('salary').value) || 0;
             const workDays = parseFloat(document.getElementById('workDays').value) || 5;
             const wfhDays = parseFloat(document.getElementById('wfhDays').value) || 0;
@@ -494,126 +252,75 @@
             const commute = parseFloat(document.getElementById('commute').value) || 0;
             const slack = parseFloat(document.getElementById('slack').value) || 0;
             
-            const cityVal = parseFloat(document.getElementById('city').value) || 0;
             const degree = document.getElementById('degree').value;
-            const school = document.getElementById('school').value;
+            const city = document.getElementById('city').value;
             const experience = document.getElementById('experience').value;
             
-            // 细分三大指数得分 (基础分为 60)
-            let mentalScore = 60 + getActiveTagValue('leaderGroup') + getActiveTagValue('colleagueGroup') + getActiveTagValue('afterHoursGroup') + getActiveTagValue('meetingGroup') + getActiveTagValue('kpiGroup') + getActiveTagValue('attendanceGroup');
-            let bodyScore = 60 + getActiveTagValue('lunchGroup') + getActiveTagValue('commuteTypeGroup') + getActiveTagValue('physicalGroup') + getActiveTagValue('healthGroup') + getActiveTagValue('hardwareGroup');
-            
-            // 限制在 0-100 之间
-            mentalScore = Math.max(5, Math.min(100, mentalScore));
-            bodyScore = Math.max(5, Math.min(100, bodyScore));
+            // 汇总情绪环境系数
+            let envCoefficient = 1.0;
+            envCoefficient += getActiveTagValue('socialSecurityTags');
+            envCoefficient += getActiveTagValue('afterHoursTags');
+            envCoefficient += getActiveTagValue('stabilityTags');
+            envCoefficient += getActiveTagValue('leaderTags');
+            envCoefficient += getActiveTagValue('colleagueTags');
 
-            // 计算整体系数 (用于最终算分)
-            let envCoefficient = 1.0 + cityVal + getActiveTagValue('hometownGroup') + getActiveTagValue('bonusGroup') + getActiveTagValue('socialSecurityGroup') + getActiveTagValue('perksGroup') + getActiveTagValue('growthGroup') + getActiveTagValue('stabilityGroup');
-            envCoefficient += (mentalScore - 60) / 200; // 精神影响转化系数
-            envCoefficient += (bodyScore - 60) / 200;   // 身体影响转化系数
-            if (envCoefficient < 0.2) envCoefficient = 0.2; 
+            // --- 核心算法 ---
 
-            // 算时薪
+            // 1. 每年实际工作天数 (天)
+            // 52周 * 工作日 - 假
             let actualYearlyDays = (52 * workDays) - annualLeave - sickLeave;
             if (actualYearlyDays < 1) actualYearlyDays = 250; 
-            let effectiveHours = workHours + (commute * 2) - (slack * 0.5) - (wfhDays / workDays * workHours * 0.3);
+            
+            // 2. 体感日工时 (时)
+            // (工时 + 通勤*1.5 - 摸鱼) * WFH减轻系数
+            let effectiveHours = workHours + (commute * 1.5) - (slack * 0.5);
             if (effectiveHours < 1) effectiveHours = 1;
-            const realHourlyWage = salary / (actualYearlyDays * effectiveHours);
 
-            // 搞钱效率进度条 (假设时薪 80 元以上为 100%)
-            let moneyScore = (realHourlyWage / 80) * 100;
-            moneyScore += (getActiveTagValue('bonusGroup') + getActiveTagValue('socialSecurityGroup')) * 100; // 福利加成
-            moneyScore = Math.max(5, Math.min(100, moneyScore));
+            // 3. 算法推演基准
+            let baseHourlyWage = 35; // 基础温饱线
 
-            // 基准要求计算
-            let baseHourlyWage = 30; 
-            if (degree === '硕士') baseHourlyWage += 12;
-            else if (degree === '专科') baseHourlyWage -= 5;
-            if (school === '海外名校/QS100' || school === '985/双一流') baseHourlyWage += 10;
-            else if (school === '211') baseHourlyWage += 5;
-            else if (school === '大专及以下') baseHourlyWage -= 5;
-            if (experience === '1-3年') baseHourlyWage += 5;
-            else if (experience === '4-6年') baseHourlyWage += 12;
-            else if (experience === '7年以上') baseHourlyWage += 20;
-
-            // 最终大分
-            const rawScore = (realHourlyWage * envCoefficient) / baseHourlyWage;
+            // 4. 最终得分
+            // (日薪 * 环境情绪加成) / (动态个人要求基准 * 体感日工时)
+            const rawScore = ( (salary / actualYearlyDays) * envCoefficient ) / (baseHourlyWage * effectiveHours);
             const finalScore = rawScore.toFixed(2);
 
-            // === 渲染数据 ===
-            const scoreEl = document.getElementById('scoreValue');
-            const circleEl = document.getElementById('scoreCircle');
-            const titleEl = document.getElementById('reportTitle');
-            const commentEl = document.getElementById('exclusiveComment');
-            const actionListEl = document.getElementById('actionList');
-            const actionPanelEl = document.getElementById('actionPanel');
+            // 渲染结果
+            const scoreValEl = document.getElementById('scoreValue');
+            const scoreBoxEl = document.getElementById('scoreBox');
+            const textEl = document.getElementById('resultText');
             
-            scoreEl.innerText = finalScore;
-            document.getElementById('resHours').innerText = effectiveHours.toFixed(1) + " 小时";
-            document.getElementById('resWage').innerText = "¥ " + realHourlyWage.toFixed(1);
+            scoreValEl.innerText = finalScore;
+            document.getElementById('resHours').innerText = effectiveHours.toFixed(1);
 
-            // 动画渲染进度条
-            setTimeout(() => {
-                document.getElementById('barMoney').style.width = moneyScore + '%';
-                document.getElementById('txtMoney').innerText = Math.round(moneyScore) + '%';
-                document.getElementById('barMental').style.width = mentalScore + '%';
-                document.getElementById('txtMental').innerText = Math.round(mentalScore) + '%';
-                document.getElementById('barBody').style.width = bodyScore + '%';
-                document.getElementById('txtBody').innerText = Math.round(bodyScore) + '%';
-            }, 100);
-
-            // 诊断分级与行动指南
+            // 诊断与文案
             if (finalScore < 0.8) {
-                titleEl.innerText = "😭 纯血牛马鉴定完毕";
-                titleEl.style.color = "#ef4444"; circleEl.style.borderColor = "#fee2e2"; scoreEl.style.color = "#ef4444";
-                actionPanelEl.style.backgroundColor = "#fef2f2"; actionPanelEl.style.borderColor = "#fca5a5";
-                document.getElementById('actionTitle').style.color = "#b91c1c";
-                actionListEl.innerHTML = `
-                    <li><b>停止精神内耗：</b> 工作只是一场交易，你的时薪仅 ${realHourlyWage.toFixed(1)} 元，不值得你搭上健康。</li>
-                    <li><b>立刻更新简历：</b> 今晚抽出一小时，把 Boss直聘 或 猎聘 刷起来。</li>
-                    <li><b>开启静默离职：</b> 不要主动提，开始踩点下班，能摸鱼绝不多干一分钟。</li>
-                `;
-                commentEl.innerText = `拿着极低的真实时薪，还要忍受非人的职场环境。这已经不是性价比低的问题了，这是在严重透支你的生命周期。别被沉没成本绑架，你比这家公司值钱得多，跑路是唯一的解药！`;
+                textEl.innerText = "😭 诊断结果：简直惨绝人寰！这份工作不仅性价比极低，还在严重消耗你的生命力。纯纯的牛马，请马上开始更新简历。";
+                scoreBoxEl.style.borderColor = "#ef4444"; // red-500
+                scoreBoxEl.style.backgroundColor = "#fef2f2"; // red-50
             } else if (finalScore >= 0.8 && finalScore < 1.5) {
-                titleEl.innerText = "😐 薛定谔的打工人";
-                titleEl.style.color = "#f59e0b"; circleEl.style.borderColor = "#fef3c7"; scoreEl.style.color = "#f59e0b";
-                actionPanelEl.style.backgroundColor = "#fffbeb"; actionPanelEl.style.borderColor = "#fde68a";
-                document.getElementById('actionTitle').style.color = "#b45309";
-                actionListEl.innerHTML = `
-                    <li><b>骑驴找马战略：</b> 现状略显鸡肋，不建议裸辞，先拿公司的钱养着自己。</li>
-                    <li><b>开发第二曲线：</b> 利用下班时间，发展副业或考取核心证书。</li>
-                    <li><b>降低期待值：</b> 不要试图改变公司，把精力从“讨好领导”转移到“提升自己”上。</li>
-                `;
-                commentEl.innerText = `食之无味，弃之可惜。这就是全国80%职场人的真实写照。公司给的钱勉强能覆盖付出。既然钱不到位，就把公司当成你的“带薪自习室”和“提款机”，稳扎稳打才是王道。`;
+                textEl.innerText = "😐 诊断结果：普普通通的B班。全国打工人的真实写照，没什么性价比可言，食之无味弃之可惜，建议骑驴找马。";
+                scoreBoxEl.style.borderColor = "#f59e0b"; // amber-500
+                scoreBoxEl.style.backgroundColor = "#fffbeb"; // amber-50
             } else if (finalScore >= 1.5 && finalScore < 2.5) {
-                titleEl.innerText = "😋 闷声发大财的智者";
-                titleEl.style.color = "#10b981"; circleEl.style.borderColor = "#d1fae5"; scoreEl.style.color = "#10b981";
-                actionPanelEl.style.backgroundColor = "#f0fdf4"; actionPanelEl.style.borderColor = "#bbf7d0";
-                document.getElementById('actionTitle').style.color = "#166534";
-                actionListEl.innerHTML = `
-                    <li><b>保持绝对低调：</b> 不要向同事透露你的真实薪资和摸鱼技巧，避免招人嫉妒。</li>
-                    <li><b>深耕核心业务：</b> 利用好现在的优质平台，多积累不可替代的行业资源。</li>
-                    <li><b>享受生活平衡：</b> 这份工作给你留出了生活空间，好好谈恋爱、去旅游、去运动！</li>
-                `;
-                commentEl.innerText = `恭喜你！在现在的经济大环境下，这已经是一份相当优质的Offer了！无论是硬核收益还是环境氛围都达到了极佳的平衡。远离无效的职场政治，好好享受工作带来的正向反馈吧！`;
+                textEl.innerText = "😋 诊断结果：相当不错的选择！这份工作给你带来了不错的收益和情绪体验，在当前环境下已经击败了绝大多数人。";
+                scoreBoxEl.style.borderColor = "#10b981"; // emerald-500
+                scoreBoxEl.style.backgroundColor = "#ecfdf5"; // emerald-50
             } else {
-                titleEl.innerText = "🤩 职场极品神仙工作";
-                titleEl.style.color = "#4f46e5"; circleEl.style.borderColor = "#e0e7ff"; scoreEl.style.color = "#4f46e5";
-                actionPanelEl.style.backgroundColor = "#eef2ff"; actionPanelEl.style.borderColor = "#c7d2fe";
-                document.getElementById('actionTitle').style.color = "#3730a3";
-                actionListEl.innerHTML = `
-                    <li><b>死死抱住大腿：</b> 这种低内耗、高收益的坑位极度稀缺，切勿轻言离职。</li>
-                    <li><b>向上管理：</b> 和直属领导保持极佳的关系，争取更大的晋升空间。</li>
-                    <li><b>积攒第一桶金：</b> 趁着在这个红利岗位上，迅速完成自己的财务积累。</li>
-                `;
-                commentEl.innerText = `绝了！超高的收益底盘加上极低的内耗损耗，这种岗位简直是职场乌托邦。你的综合指数已经击败了全国99%的打工人。小林我实名羡慕，请问你们公司还缺人吗？`;
+                textEl.innerText = "🤩 诊断结果：纯纯的神仙工作！这简直是来报恩的岗位！性价比拉满，请死死抱住这家公司的大腿！";
+                scoreBoxEl.style.borderColor = "#6366f1"; // indigo-500
+                scoreBoxEl.style.backgroundColor = "#eef2ff"; // indigo-50
             }
+
+            // 切换页面
+            document.getElementById('formPage').style.display = 'none';
+            document.getElementById('resultPage').style.display = 'block';
+            window.scrollTo(0, 0); // 滚动到顶部
         }
 
         function goBack() {
-            document.getElementById('resultBoard').style.display = 'none';
-            document.getElementById('formSection').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('resultPage').style.display = 'none';
+            document.getElementById('formPage').style.display = 'block';
+            window.scrollTo(0, 0);
         }
     </script>
 </body>
